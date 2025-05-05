@@ -85,11 +85,42 @@
 
     <label>Poste</label>
     <select id="poste">
-      <option>Gardien</option>
-      <option>Défenseur</option>
-      <option>Milieu</option>
-      <option>Attaquant</option>
-    </select>
+      <label for="poste">Poste</label>
+  <optgroup label="Gardien">
+    <option value="Gardien">Gardien</option>
+    <option value="Gardien relanceur">Gardien relanceur</option>
+  </optgroup>
+  <optgroup label="Défenseurs">
+    <option value="Défenseur">Défenseur</option>
+    <option value="DFC">DFC</option>
+    <option value="DFG">DFG</option>
+    <option value="DFD">DFD</option>
+    <option value="Défenseur libéro">Défenseur libéro</option>
+    <option value="DLC">DLC</option>
+    <option value="DLG">DLG</option>
+    <option value="DLD">DLD</option>
+  </optgroup>
+  <optgroup label="Milieux">
+    <option value="Milieu défensif">Milieu défensif</option>
+    <option value="MDC">MDC</option>
+    <option value="MDD">MDD</option>
+    <option value="MDG">MDG</option>
+    <option value="Milieu offensif">Milieu offensif</option>
+    <option value="MOD">MOD</option>
+    <option value="MOG">MOG</option>
+    <option value="MOC">MOC</option>
+  </optgroup>
+  <optgroup label="Attaquants de soutien">
+    <option value="ASC">ASC</option>
+    <option value="ASD">ASD</option>
+    <option value="ASG">ASG</option>
+  </optgroup>
+  <optgroup label="Attaquants">
+    <option value="ATC">ATC</option>
+    <option value="ATD">ATD</option>
+    <option value="ATG">ATG</option>
+  </optgroup>
+</select>
 
     <label>Note actuelle</label>
     <input type="number" id="note">
