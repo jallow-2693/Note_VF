@@ -15,14 +15,13 @@
     }
     .container {
       background-color: rgba(0, 0, 0, 0.8);
-      max-width: 600px;
+      max-width: 700px;
       margin: 30px auto;
       padding: 20px;
       border-radius: 15px;
     }
     h1 {
       text-align: center;
-      margin-bottom: 20px;
     }
     label {
       display: block;
@@ -30,33 +29,54 @@
     }
     input, select {
       width: 100%;
-      padding: 10px;
+      padding: 8px;
       margin-top: 5px;
       border-radius: 5px;
       border: none;
     }
     button {
-      margin-top: 20px;
-      padding: 12px;
+      margin-top: 15px;
+      padding: 10px;
       width: 100%;
       background-color: #28a745;
-      border: none;
       color: white;
-      font-size: 16px;
+      font-weight: bold;
+      border: none;
       border-radius: 5px;
       cursor: pointer;
     }
-    #output {
+    .fiche {
       margin-top: 20px;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 15px;
+      padding: 10px;
+      background-color: rgba(255,255,255,0.1);
       border-radius: 10px;
+    }
+    .fiche button {
+      background-color: #dc3545;
+      margin-top: 10px;
+    }
+    .liste-joueurs {
+      margin-top: 30px;
+    }
+    .liste-joueurs ul {
+      list-style: none;
+      padding: 0;
+    }
+    .liste-joueurs li {
+      cursor: pointer;
+      padding: 8px;
+      background-color: rgba(255,255,255,0.1);
+      margin-bottom: 5px;
+      border-radius: 5px;
+    }
+    .liste-joueurs li:hover {
+      background-color: rgba(255,255,255,0.2);
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Fiche Joueur</h1>
+    <h1>Créer une fiche joueur</h1>
     <label>Nom du joueur</label>
     <input type="text" id="nom">
 
@@ -65,10 +85,10 @@
 
     <label>Poste</label>
     <select id="poste">
-      <option value="Gardien">Gardien</option>
-      <option value="Défenseur">Défenseur</option>
-      <option value="Milieu">Milieu</option>
-      <option value="Attaquant">Attaquant</option>
+      <option>Gardien</option>
+      <option>Défenseur</option>
+      <option>Milieu</option>
+      <option>Attaquant</option>
     </select>
 
     <label>Note actuelle</label>
@@ -83,13 +103,49 @@
     <label>Club de formation</label>
     <input type="text" id="formation">
 
-    <button onclick="enregistrerEtAfficher()">Créer la fiche</button>
+    <button onclick="ajouterJoueur()">Ajouter le joueur</button>
 
-    <div id="output"></div>
+    <div class="liste-joueurs">
+      <h2>Mes joueurs</h2>
+      <ul id="liste"></ul>
+    </div>
+
+    <div id="fiche" class="fiche"></div>
   </div>
 
   <script>
-    function enregistrerEtAfficher() {
+    let joueurs = JSON.parse(localStorage.getItem("joueurs")) || [];
+
+    function enregistrer() {
+      localStorage.setItem("joueurs", JSON.stringify(joueurs));
+    }
+
+    function afficherListe() {
+      const liste = document.getElementById("liste");
+      liste.innerHTML = "";
+      joueurs.forEach((joueur, index) => {
+        const li = document.createElement("li");
+        li.textContent = joueur.nom + " (" + joueur.poste + ")";
+        li.onclick = () => afficherFiche(index);
+        liste.appendChild(li);
+      });
+    }
+
+    function afficherFiche(index) {
+      const j = joueurs[index];
+      const div = document.getElementById("fiche");
+      div.innerHTML = `
+        <h3>${j.nom} (${j.poste})</h3>
+        <p><strong>Âge :</strong> ${j.age}</p>
+        <p><strong>Note :</strong> ${j.note}</p>
+        <p><strong>Potentiel :</strong> ${j.potentiel}</p>
+        <p><strong>XP :</strong> ${j.xp}</p>
+        <p><strong>Formation :</strong> ${j.formation}</p>
+        <button onclick="supprimerJoueur(${index})">Supprimer</button>
+      `;
+    }
+
+    function ajouterJoueur() {
       const joueur = {
         nom: document.getElementById("nom").value,
         age: document.getElementById("age").value,
@@ -99,40 +155,22 @@
         xp: document.getElementById("xp").value,
         formation: document.getElementById("formation").value
       };
-
-      // Sauvegarde dans localStorage
-      localStorage.setItem("joueur", JSON.stringify(joueur));
-
-      afficherJoueur(joueur);
+      joueurs.push(joueur);
+      enregistrer();
+      afficherListe();
     }
 
-    function afficherJoueur(joueur) {
-      const output = `
-        <h2>${joueur.nom} (${joueur.poste})</h2>
-        <p><strong>Âge :</strong> ${joueur.age} ans</p>
-        <p><strong>Note actuelle :</strong> ${joueur.note}</p>
-        <p><strong>Potentiel :</strong> ${joueur.potentiel}</p>
-        <p><strong>XP :</strong> ${joueur.xp}</p>
-        <p><strong>Formation :</strong> ${joueur.formation}</p>
-      `;
-      document.getElementById("output").innerHTML = output;
-    }
-
-    // Chargement automatique si données existantes
-    window.onload = () => {
-      const saved = localStorage.getItem("joueur");
-      if (saved) {
-        const joueur = JSON.parse(saved);
-        document.getElementById("nom").value = joueur.nom;
-        document.getElementById("age").value = joueur.age;
-        document.getElementById("poste").value = joueur.poste;
-        document.getElementById("note").value = joueur.note;
-        document.getElementById("potentiel").value = joueur.potentiel;
-        document.getElementById("xp").value = joueur.xp;
-        document.getElementById("formation").value = joueur.formation;
-        afficherJoueur(joueur);
+    function supprimerJoueur(index) {
+      if (confirm("Supprimer ce joueur ?")) {
+        joueurs.splice(index, 1);
+        enregistrer();
+        afficherListe();
+        document.getElementById("fiche").innerHTML = "";
       }
-    };
+    }
+
+    // Au chargement
+    afficherListe();
   </script>
 </body>
-</html>
+  </html>
