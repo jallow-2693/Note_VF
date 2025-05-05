@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Ma note VF</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: url('https://cdn.pixabay.com/photo/2016/11/21/16/03/football-1848976_960_720.jpg') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+      color: white;
+    }
+    .container {
+      background-color: rgba(0, 0, 0, 0.8);
+      max-width: 600px;
+      margin: 30px auto;
+      padding: 20px;
+      border-radius: 15px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: none;
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px;
+      width: 100%;
+      background-color: #28a745;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #output {
+      margin-top: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Fiche Joueur</h1>
+    <label>Nom du joueur</label>
+    <input type="text" id="nom">
+
+    <label>Âge</label>
+    <input type="number" id="age">
+
+    <label>Poste</label>
+    <select id="poste">
+      <option value="Gardien">Gardien</option>
+      <option value="Défenseur">Défenseur</option>
+      <option value="Milieu">Milieu</option>
+      <option value="Attaquant">Attaquant</option>
+    </select>
+
+    <label>Note actuelle</label>
+    <input type="number" id="note">
+
+    <label>Potentiel</label>
+    <input type="number" id="potentiel">
+
+    <label>XP en stock</label>
+    <input type="number" id="xp">
+
+    <label>Club de formation</label>
+    <input type="text" id="formation">
+
+    <button onclick="enregistrerEtAfficher()">Créer la fiche</button>
+
+    <div id="output"></div>
+  </div>
+
+  <script>
+    function enregistrerEtAfficher() {
+      const joueur = {
+        nom: document.getElementById("nom").value,
+        age: document.getElementById("age").value,
+        poste: document.getElementById("poste").value,
+        note: document.getElementById("note").value,
+        potentiel: document.getElementById("potentiel").value,
+        xp: document.getElementById("xp").value,
+        formation: document.getElementById("formation").value
+      };
+
+      // Sauvegarde dans localStorage
+      localStorage.setItem("joueur", JSON.stringify(joueur));
+
+      afficherJoueur(joueur);
+    }
+
+    function afficherJoueur(joueur) {
+      const output = `
+        <h2>${joueur.nom} (${joueur.poste})</h2>
+        <p><strong>Âge :</strong> ${joueur.age} ans</p>
+        <p><strong>Note actuelle :</strong> ${joueur.note}</p>
+        <p><strong>Potentiel :</strong> ${joueur.potentiel}</p>
+        <p><strong>XP :</strong> ${joueur.xp}</p>
+        <p><strong>Formation :</strong> ${joueur.formation}</p>
+      `;
+      document.getElementById("output").innerHTML = output;
+    }
+
+    // Chargement automatique si données existantes
+    window.onload = () => {
+      const saved = localStorage.getItem("joueur");
+      if (saved) {
+        const joueur = JSON.parse(saved);
+        document.getElementById("nom").value = joueur.nom;
+        document.getElementById("age").value = joueur.age;
+        document.getElementById("poste").value = joueur.poste;
+        document.getElementById("note").value = joueur.note;
+        document.getElementById("potentiel").value = joueur.potentiel;
+        document.getElementById("xp").value = joueur.xp;
+        document.getElementById("formation").value = joueur.formation;
+        afficherJoueur(joueur);
+      }
+    };
+  </script>
+</body>
+</html>
